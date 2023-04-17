@@ -1,12 +1,15 @@
 package com.emailSend;
 
 
+import java.io.File;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 
 public class App 
@@ -35,7 +38,7 @@ public class App
 		properties.put("mail.smtp.auth", "true");
 		
 		//step 1: to get the session object
-		// Session session = Session.getInstance(properties);
+		
 		 Session session2 = Session.getInstance(properties, new javax.mail.Authenticator() {
 			 	@Override
 				protected javax.mail.PasswordAuthentication getPasswordAuthentication(){
@@ -60,7 +63,33 @@ public class App
 		
 		//adding text to message
 		m.setText(msg);
+
+		//attachement..
+
+        //file path
+        String path="C:\\Users\\Divyesh\\Pictures\\refresh.png";
+
+		MimeMultipart mimeMultipart = new MimeMultipart();
 		
+		MimeBodyPart textMime = new MimeBodyPart();
+
+		MimeBodyPart fileMime = new MimeBodyPart();
+
+		try {
+
+			textMime.setText(msg);
+
+			File file=new File(path);
+			fileMime.attachFile(file);
+
+
+			mimeMultipart.addBodyPart(textMime);
+			mimeMultipart.addBodyPart(fileMime);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		m.setContent(mimeMultipart);
 		//send
 		
 		//Step 3: send the message using Transport class
@@ -73,7 +102,5 @@ public class App
 		}
 	}
 
-	/*protected static PasswordAuthentication PasswordAuthentication(String string, String string2) {
-		return null;
-	}*/
+	
 }
